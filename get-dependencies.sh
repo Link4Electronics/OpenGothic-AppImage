@@ -20,23 +20,29 @@ get-debloated-pkgs --add-common --prefer-nano
 #make-aur-package PACKAGENAME
 
 # If the application needs to be manually built that has to be done down here
-
-# if you also have to make nightly releases check for DEVEL_RELEASE = 1
-#
-# if [ "${DEVEL_RELEASE-}" = 1 ]; then
-# 	nightly build steps
-# else
-# 	regular build steps
-# fi
-echo "Making nightly build of OpenGothic..."
+#echo "Making nightly build of OpenGothic..."
+#echo "---------------------------------------------------------------"
+#REPO="https://github.com/Try/OpenGothic"
+#VERSION="$(git ls-remote "$REPO" HEAD | cut -c 1-9 | head -1)"
+#git clone --recursive --depth 1 "$REPO" ./OpenGothic
+#echo "$VERSION" > ~/version
+echo "Building OpenGothic..."
 echo "---------------------------------------------------------------"
-REPO="https://github.com/Try/OpenGothic"
-VERSION="$(git ls-remote "$REPO" HEAD | cut -c 1-9 | head -1)"
-git clone --recursive --depth 1 "$REPO" ./OpenGothic
-echo "$VERSION" > ~/version
-
 mkdir -p ./AppDir/bin
+git clone --recursive --depth 1 https://github.com/Try/OpenGothic ./OpenGothic
 cd ./OpenGothic
+if [ "${DEVEL_RELEASE-}" = 1 ]; then
+    echo "Making nightly build..."
+    git rev-parse --short HEAD > ~/version
+else
+    echo "Making stable build..."
+    RAW_TAG=$(git tag -l "opengothic-v*" | sort -V | tail -n 1)
+    git checkout "$RAW_TAG"
+    echo "$RAW_TAG" | sed 's/opengothic-v//' > ~/version
+fi
+
+#mkdir -p ./AppDir/bin
+#cd ./OpenGothic
 mkdir -p build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-Wno-error=stringop-overflow" ..
 make -j$(nproc)
