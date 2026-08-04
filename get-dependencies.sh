@@ -36,7 +36,6 @@ cd ./OpenGothic
 #    git checkout "$RAW_TAG"
 #    echo "$RAW_TAG" | sed 's/opengothic-v//' > ~/version
 #fi
-sed -i '4i#include <cstdint>' game/dmusic/soundfont.h
 mkdir -p build && cd build
 cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-Wno-error=stringop-overflow -Wno-array-bounds" ..
 make -j$(nproc)
