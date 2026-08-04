@@ -38,6 +38,6 @@ cd ./OpenGothic
 #fi
 sed -i '4i#include <cstdint>' game/dmusic/soundfont.h
 mkdir -p build && cd build
-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-Wno-error=stringop-overflow" ..
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-Wno-error=stringop-overflow -Wno-array-bounds" ..
 make -j$(nproc)
 mv -v opengothic/Gothic2Notr ../../AppDir/bin
